@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Card implements Serializable {
     @Id
     @Column(name = "card_id", unique = true, nullable = false)
-    private Long cardId;
+    private long cardId;
     @Column(name = "type", nullable = false)
     private CardType type;
     @Column(name = "name", unique = true, nullable = false)
@@ -27,16 +27,33 @@ public class Card implements Serializable {
         this.image = image;
         this.description = description;
     }
-    public Long getCardId(){
+    public long getCardId(){
         return this.cardId;
     }
     public CardType getType(){
         return this.type;
+    }
+    public String getName(){
+        return this.name;
     }
     public byte[] getImage() {
         return this.image;
     }
     public String getDescription(){
         return this.description;
+    }
+
+    public void setType(CardType type){
+        this.type = type;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setImage(byte[] image){
+        this.image = image;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
     }
 }
