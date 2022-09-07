@@ -6,5 +6,4 @@ import pl.jellytech.machiavelli.cards.entities.Card;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
-
 }

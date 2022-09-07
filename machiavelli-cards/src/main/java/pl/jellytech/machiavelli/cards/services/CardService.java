@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.jellytech.machiavelli.cards.entities.Card;
 import pl.jellytech.machiavelli.cards.repositories.CardRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,12 +15,10 @@ import java.util.List;
 @Slf4j
 public class CardService implements ICardService {
     private final CardRepository cardRepository;
-
     @Autowired
     public CardService(CardRepository cardRepository){
         this.cardRepository = cardRepository;
     }
-
     @Transactional
     public Card createOrUpdate(Card card){
         this.cardRepository.save(card);

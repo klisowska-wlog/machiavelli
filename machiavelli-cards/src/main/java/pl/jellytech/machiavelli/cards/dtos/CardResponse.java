@@ -7,7 +7,12 @@ import pl.jellytech.machiavelli.cards.entities.CardType;
 
 @Getter
 @Setter
-public class CardResponse extends CardUpdateRequest {
+public class CardResponse {
+    private byte[] image;
+    private Long cardId;
+    private CardType cardType;
+    private String name;
+    private String description;
     public CardResponse(Card card){
         this.setCardId(card.getCardId());
         this.setCardType(card.getType());
