@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Extra logging related to initialization of Log4j.
+ Set to debug or trace if log4j initialization is failing. -->
+<Configuration>
+    <Appenders>
+        <RollingFile name="App-File-Appender"
+                     fileName="${sys:log-path}/application.log"
+                     filePattern="${sys:log-path}/application.%d{yyyy-MM-dd}.log"
+                     ignoreExceptions="false">
+            <PatternLayout>
+                <pattern>
+                    %d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n
+                </pattern>
+            </PatternLayout>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?" />
+            <DefaultRolloverStrategy>
+                <Delete basePath="${sys:log-path}" maxDepth="1">
+                    <IfFileName glob="*/application.*.log" />
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <!-- Console appender configuration -->
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    %d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n
+                </pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <logger name="org.hibernate.SQL" additivity="false" level="debug">
+            <level value="DEBUG" />
+            <appender-ref ref="App-File-Appender" />
+            <appender-ref ref="Console-Appender" />
+        </logger>
+        <logger name="org.hibernate.type" additivity="false" level="debug">
+            <level value="TRACE" />
+            <appender-ref ref="App-File-Appender" />
+            <appender-ref ref="Console-Appender" />
+        </logger>
+        <logger name="org.hibernate.type" additivity="false" level="debug">
+            <level value="TRACE" />
+            <appender-ref ref="App-File-Appender" />
+            <appender-ref ref="Console-Appender" />
+        </logger>
+        <!-- Root logger referring to console appender -->
+        <Root level="info" additivity="false">
+            <AppenderRef ref="Console-Appender" />
+            <AppenderRef ref="App-File-Appender" />
+        </Root>
+    </Loggers>
+</Configuration>

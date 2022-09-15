@@ -3,13 +3,14 @@ package pl.jellytech.machiavelli.cards.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jellytech.machiavelli.cards.dtos.CardResponse;
 import pl.jellytech.machiavelli.cards.entities.Card;
 import pl.jellytech.machiavelli.cards.entities.CardType;
-import pl.jellytech.machiavelli.cards.services.ICardService;
+import pl.jellytech.machiavelli.cards.services.CardService;
 import pl.jellytech.machiavelli.cards.utils.ControllerUtils;
 
 import java.io.IOException;
@@ -21,53 +22,54 @@ import java.util.stream.Collectors;
 @RequestMapping( "api/card")
 @Slf4j
 public class CardController {
-    private final ICardService cardService;
+    private final CardService cardService;
     @Autowired
-    public CardController(ICardService cardService){
+    public CardController(CardService cardService){
         this.cardService = cardService;
     }
-    @PostMapping()
-    public ResponseEntity<CardResponse> CreateOrUpdate(@RequestParam("cardType") CardType cardType,
-                                               @RequestParam("name") String name,
-                                               @RequestParam("description") String description,
-                                               @RequestParam(value = "cardId",required = false) Optional<Long> cardId,
-                                               @RequestPart("image") MultipartFile image)
-            throws IOException {
-        log.info(String.format("Saving Card entity with name %s", cardType));
+
+    @PostMapping(consumes ={MediaType.MULTIPART_FORM_DATA_VALUE} )
+    public ResponseEntity createOrUpdate(@RequestPart("cardType") String cardType,
+                     @RequestPart("name") String name,
+                     @RequestPart("description") String description,
+                     @RequestPart(value = "cardId",required = false) Optional<Long> cardId,
+                     @RequestPart("image") MultipartFile image){
+        log.debug("Saving Card entity with name {name}");
         try{
             final Card card = this.cardService.createOrUpdate(new Card(
-                    cardType,
+                    CardType.valueOf(cardType.toUpperCase()),
                     name,
                     image.getBytes(),
                     description,
                     cardId
             ));
-            log.info(String.format("Card %s saved", card.getName()));
+            log.debug("Card {card.getName()} saved");
             return ControllerUtils.SuccessResponse(null);
-        }catch (Exception ex){
-            log.error(ex.getMessage());
-            throw ex;
         }
+        catch (IOException ex){
+            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
     @GetMapping
-    public ResponseEntity<List<CardResponse>> GetAll(){
+    public ResponseEntity getAll(){
         try{
-            log.info("Get all cards started...");
+            log.debug("Get all cards started...");
             List<Card> cards = this.cardService.getAll();
-            log.info("Get all cards finished...");
+            log.debug("Get all cards finished...");
             return ControllerUtils
                     .SuccessResponse(
                             cards.stream().map(CardResponse::new).collect(Collectors.toList())
                     );
         }catch(Exception ex){
             log.error(ex.getMessage());
-            throw ex;
+            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("id")
-    public ResponseEntity<CardResponse> GetById(@RequestParam long cardId){
+    public ResponseEntity getById(@RequestParam long cardId){
         try{
-            log.info(String.format("Get card by id %s from DB started...", cardId));
+            log.debug("Get card by id {cardId} from DB started...");
             final Card card = this.cardService.getById(cardId);
             if(card == null){
                 return ControllerUtils.ErrorResponse(
@@ -76,18 +78,18 @@ public class CardController {
                 );
             }
             return ControllerUtils.SuccessResponse(new CardResponse(card));
-        }catch (Exception ex){
+        }catch(Exception ex){
             log.error(ex.getMessage());
-            throw ex;
+            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @DeleteMapping
-    public ResponseEntity<Boolean> Delete(@RequestParam long cardId){
+    public ResponseEntity delete(@RequestParam long cardId){
         try{
             this.cardService.delete(cardId);
-        }catch (Exception ex){
+        }catch(Exception ex){
             log.error(ex.getMessage());
-            throw ex;
+            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ControllerUtils.SuccessResponse(true);
     }
