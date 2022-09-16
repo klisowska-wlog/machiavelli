@@ -21,7 +21,7 @@ public class CardServiceImpl implements CardService {
     }
     @Transactional
     public Card createOrUpdate(Card card){
-        this.cardRepository.save(card);
+        card = this.cardRepository.save(card);
         return card;
     }
     public Card getById(Long cardId){

@@ -34,7 +34,7 @@ public class CardController {
                      @RequestPart("description") String description,
                      @RequestPart(value = "cardId",required = false) Optional<Long> cardId,
                      @RequestPart("image") MultipartFile image){
-        log.debug("Saving Card entity with name {name}");
+        log.debug("Saving Card entity with name {}",name);
         try{
             final Card card = this.cardService.createOrUpdate(new Card(
                     CardType.valueOf(cardType.toUpperCase()),
@@ -43,10 +43,11 @@ public class CardController {
                     description,
                     cardId
             ));
-            log.debug("Card {card.getName()} saved");
+            log.debug("Card {} saved",card.getName());
             return ControllerUtils.SuccessResponse(null);
         }
         catch (IOException ex){
+            log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -62,14 +63,14 @@ public class CardController {
                             cards.stream().map(CardResponse::new).collect(Collectors.toList())
                     );
         }catch(Exception ex){
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("id")
     public ResponseEntity getById(@RequestParam long cardId){
         try{
-            log.debug("Get card by id {cardId} from DB started...");
+            log.debug("Get card by id {} from DB started...",cardId);
             final Card card = this.cardService.getById(cardId);
             if(card == null){
                 return ControllerUtils.ErrorResponse(
@@ -79,7 +80,7 @@ public class CardController {
             }
             return ControllerUtils.SuccessResponse(new CardResponse(card));
         }catch(Exception ex){
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -88,7 +89,7 @@ public class CardController {
         try{
             this.cardService.delete(cardId);
         }catch(Exception ex){
-            log.error(ex.getMessage());
+            log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ControllerUtils.SuccessResponse(true);

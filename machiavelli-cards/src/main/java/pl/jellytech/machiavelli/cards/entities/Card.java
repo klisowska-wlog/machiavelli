@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 @Entity
-@Table(name = "cards", schema = "card")
+@Table(name = "cards")
 public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

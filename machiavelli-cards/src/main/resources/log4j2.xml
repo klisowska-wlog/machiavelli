@@ -31,17 +31,14 @@
     </Appenders>
     <Loggers>
         <logger name="org.hibernate.SQL" additivity="false" level="debug">
-            <level value="DEBUG" />
             <appender-ref ref="App-File-Appender" />
             <appender-ref ref="Console-Appender" />
         </logger>
         <logger name="org.hibernate.type" additivity="false" level="debug">
-            <level value="TRACE" />
             <appender-ref ref="App-File-Appender" />
             <appender-ref ref="Console-Appender" />
         </logger>
         <logger name="org.hibernate.type" additivity="false" level="debug">
-            <level value="TRACE" />
             <appender-ref ref="App-File-Appender" />
             <appender-ref ref="Console-Appender" />
         </logger>
