@@ -1,10 +1,12 @@
 package pl.jellytech.machiavelli.cards.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jellytech.machiavelli.cards.dtos.CardResponse;
@@ -23,9 +25,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CardController {
     private final CardService cardService;
+    private final ModelMapper modelMapper;
     @Autowired
-    public CardController(CardService cardService){
+    public CardController(CardService cardService, ModelMapper modelMapper){
+
         this.cardService = cardService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping(consumes ={MediaType.MULTIPART_FORM_DATA_VALUE} )
@@ -44,7 +49,7 @@ public class CardController {
                     cardId
             ));
             log.debug("Card {} saved",card.getName());
-            return ControllerUtils.SuccessResponse(null);
+            return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         }
         catch (IOException ex){
             log.error(ex.getMessage(), ex);
@@ -60,7 +65,7 @@ public class CardController {
             log.debug("Get all cards finished...");
             return ControllerUtils
                     .SuccessResponse(
-                            cards.stream().map(CardResponse::new).collect(Collectors.toList())
+                            cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList())
                     );
         }catch(Exception ex){
             log.error(ex.getMessage(), ex);
@@ -78,7 +83,7 @@ public class CardController {
                         HttpStatus.NOT_FOUND
                 );
             }
-            return ControllerUtils.SuccessResponse(new CardResponse(card));
+            return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         }catch(Exception ex){
             log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

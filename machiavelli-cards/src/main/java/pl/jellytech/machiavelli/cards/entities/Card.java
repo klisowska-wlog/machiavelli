@@ -1,5 +1,8 @@
 package pl.jellytech.machiavelli.cards.entities;
 
+import org.modelmapper.ModelMapper;
+import pl.jellytech.machiavelli.cards.dtos.CardResponse;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Optional;
@@ -57,4 +60,10 @@ public class Card implements Serializable {
     public void setDescription(String description){
         this.description = description;
     }
+
+    public CardResponse convertToDto(Card this, ModelMapper modelMapper){
+        CardResponse dto = modelMapper.map(this, CardResponse.class);
+        return dto;
+    }
+
 }
