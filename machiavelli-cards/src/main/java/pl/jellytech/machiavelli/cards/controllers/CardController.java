@@ -16,6 +16,8 @@ import pl.jellytech.machiavelli.cards.services.CardService;
 import pl.jellytech.machiavelli.cards.utils.ControllerUtils;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,8 +63,10 @@ public class CardController {
     public ResponseEntity getAll(){
         try{
             log.debug("Get all cards started...");
+            final Instant startTime = Instant.now();
             List<Card> cards = this.cardService.getAll();
-            log.debug("Get all cards finished...");
+            final Duration timeElapsed = Duration.between(startTime, Instant.now());
+            log.debug("Get all cards finished... Duration: {} ms",timeElapsed.toMillis());
             return ControllerUtils
                     .SuccessResponse(
                             cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList())

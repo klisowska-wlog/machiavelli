@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
@@ -32,6 +33,7 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
         config.setDriverClassName(this.driverClassName);
         config.setUsername(this.username);
         config.setPassword(this.password);
+        config.setConnectionTimeout(TimeUnit.MINUTES.toMillis(5));
         return config;
     }
 

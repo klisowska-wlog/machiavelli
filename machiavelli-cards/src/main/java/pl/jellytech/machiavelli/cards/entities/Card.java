@@ -1,5 +1,8 @@
 package pl.jellytech.machiavelli.cards.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import pl.jellytech.machiavelli.cards.dtos.CardResponse;
 
@@ -9,6 +12,9 @@ import java.util.Optional;
 
 @Entity
 @Table(name = "cards")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,44 +29,13 @@ public class Card implements Serializable {
     private byte[] image;
     @Column(name = "description", unique = true, nullable = false)
     private String description;
-    public Card(){}
     public Card(CardType type, String name, byte[] image, String description, Optional<Long> cardId){
-        this.type = type;
-        this.name = name;
-        this.image = image;
-        this.description = description;
-        cardId.ifPresent(aLong -> this.cardId = aLong);
-
+        this.setType(type);
+        this.setName(name);
+        this.setImage(image);
+        this.setDescription(description);
+        cardId.ifPresent(aLong -> this.setCardId(cardId.get()));
     }
-    public long getCardId(){
-        return this.cardId;
-    }
-    public CardType getType(){
-        return this.type;
-    }
-    public String getName(){
-        return this.name;
-    }
-    public byte[] getImage() {
-        return this.image;
-    }
-    public String getDescription(){
-        return this.description;
-    }
-
-    public void setType(CardType type){
-        this.type = type;
-    }
-    public void setName(String name){
-        this.name = name;
-    }
-    public void setImage(byte[] image){
-        this.image = image;
-    }
-    public void setDescription(String description){
-        this.description = description;
-    }
-
     public CardResponse convertToDto(Card this, ModelMapper modelMapper){
         CardResponse dto = modelMapper.map(this, CardResponse.class);
         return dto;

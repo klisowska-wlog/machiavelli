@@ -42,6 +42,12 @@
             <appender-ref ref="App-File-Appender" />
             <appender-ref ref="Console-Appender" />
         </logger>
+        <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="info">
+            <appender-ref ref="Console-Appender" />
+        </logger>
+        <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="debug">
+            <appender-ref ref="App-File-Appender" />
+        </logger>
         <!-- Root logger referring to console appender -->
         <Root level="info" additivity="false">
             <AppenderRef ref="Console-Appender" />
