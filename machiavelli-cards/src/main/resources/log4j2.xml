@@ -4,8 +4,8 @@
 <Configuration>
     <Appenders>
         <RollingFile name="App-File-Appender"
-                     fileName="${sys:log-path}/application.log"
-                     filePattern="${sys:log-path}/application.%d{yyyy-MM-dd}.log"
+                     fileName="application.log"
+                     filePattern="application.%d{yyyy-MM-dd}.log"
                      ignoreExceptions="false">
             <PatternLayout>
                 <pattern>
