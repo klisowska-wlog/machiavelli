@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.jellytech.machiavelli.cards.entities.Card;
 import pl.jellytech.machiavelli.cards.entities.CardType;
 
 @Getter

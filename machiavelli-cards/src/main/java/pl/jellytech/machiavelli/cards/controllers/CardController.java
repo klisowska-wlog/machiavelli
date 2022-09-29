@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jellytech.machiavelli.cards.dtos.BaseResponseWrapper;
 import pl.jellytech.machiavelli.cards.dtos.CardResponse;
 import pl.jellytech.machiavelli.cards.entities.Card;
 import pl.jellytech.machiavelli.cards.entities.CardType;
@@ -37,10 +38,10 @@ public class CardController {
 
     @PostMapping(consumes ={MediaType.MULTIPART_FORM_DATA_VALUE} )
     public ResponseEntity createOrUpdate(@RequestPart("cardType") String cardType,
-                     @RequestPart("name") String name,
-                     @RequestPart("description") String description,
-                     @RequestPart(value = "cardId",required = false) Optional<Long> cardId,
-                     @RequestPart("image") MultipartFile image){
+                                                              @RequestPart("name") String name,
+                                                              @RequestPart("description") String description,
+                                                              @RequestPart(value = "cardId",required = false) Optional<Long> cardId,
+                                                              @RequestPart("image") MultipartFile image){
         log.debug("Saving Card entity with name {}",name);
         try{
             final Card card = this.cardService.createOrUpdate(new Card(
@@ -55,7 +56,7 @@ public class CardController {
         }
         catch (IOException ex){
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -73,7 +74,7 @@ public class CardController {
                     );
         }catch(Exception ex){
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("id")
@@ -83,14 +84,14 @@ public class CardController {
             final Card card = this.cardService.getById(cardId);
             if(card == null){
                 return ControllerUtils.ErrorResponse(
-                        String.format("Card with id %s not found", cardId),
+                        new Exception(String.format("Card with id %s not found", cardId)),
                         HttpStatus.NOT_FOUND
                 );
             }
             return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         }catch(Exception ex){
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @DeleteMapping
@@ -99,7 +100,7 @@ public class CardController {
             this.cardService.delete(cardId);
         }catch(Exception ex){
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ControllerUtils.SuccessResponse(true);
     }

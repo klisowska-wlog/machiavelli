@@ -9,9 +9,10 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ExceptionResponse {
+public class ExceptionPayload {
     private Timestamp timestamp;
     private HttpStatus status;
     private String message;
+    private StackTraceElement[] stackTrace;
 }
 
