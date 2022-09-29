@@ -2,6 +2,7 @@ package pl.jellytech.machiavelli.cards.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +22,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RestController()
@@ -42,16 +46,20 @@ public class CardController {
                                                               @RequestPart("description") String description,
                                                               @RequestPart(value = "cardId",required = false) Optional<Long> cardId,
                                                               @RequestPart("image") MultipartFile image){
-        log.debug("Saving Card entity with name {}",name);
+
         try{
-            final Card card = this.cardService.createOrUpdate(new Card(
+            final byte[] imageBytes = image.getBytes();
+            Supplier<Card> func = () -> this.cardService.createOrUpdate(new Card(
                     CardType.valueOf(cardType.toUpperCase()),
                     name,
-                    image.getBytes(),
+                    imageBytes,
                     description,
                     cardId
             ));
-            log.debug("Card {} saved",card.getName());
+            final Card card = ControllerUtils.FunctionLogMeasureWrapper(func,
+                    String.format("Saving Card entity with name %s",name),
+                    String.format("Card %s saved",name));
+
             return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         }
         catch (IOException ex){
@@ -63,11 +71,12 @@ public class CardController {
     @GetMapping
     public ResponseEntity getAll(){
         try{
-            log.debug("Get all cards started...");
-            final Instant startTime = Instant.now();
-            List<Card> cards = this.cardService.getAll();
-            final Duration timeElapsed = Duration.between(startTime, Instant.now());
-            log.debug("Get all cards finished... Duration: {} ms",timeElapsed.toMillis());
+
+            Supplier<List<Card>> callableFunc = this.cardService::getAll;
+            List<Card> cards = ControllerUtils.FunctionLogMeasureWrapper(callableFunc,
+                    "Get all cards started...",
+                    "Get all cards finished...");
+
             return ControllerUtils
                     .SuccessResponse(
                             cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList())
@@ -80,8 +89,11 @@ public class CardController {
     @GetMapping("id")
     public ResponseEntity getById(@RequestParam long cardId){
         try{
-            log.debug("Get card by id {} from DB started...",cardId);
-            final Card card = this.cardService.getById(cardId);
+            Supplier<Card> function = () -> this.cardService.getById(cardId);
+            final String generalLogMsg = String.format("Get card by id %s from DB",cardId);
+            final Card card = ControllerUtils.FunctionLogMeasureWrapper(function,
+                    String.format("%s started...",generalLogMsg),
+                    String.format("%s finished...",generalLogMsg));
             if(card == null){
                 return ControllerUtils.ErrorResponse(
                         new Exception(String.format("Card with id %s not found", cardId)),
@@ -97,7 +109,10 @@ public class CardController {
     @DeleteMapping
     public ResponseEntity delete(@RequestParam long cardId){
         try{
-            this.cardService.delete(cardId);
+            final String generalLogMsg = String.format("Delete card by id %s from DB",cardId);
+            Runnable func = () -> this.cardService.delete(cardId);
+            ControllerUtils.FunctionLogMeasureWrapper(func, String.format("%s started...",generalLogMsg),
+                    String.format("%s finished...",generalLogMsg));
         }catch(Exception ex){
             log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
