@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.jellytech.machiavelli.cards.utils.TimeUtils;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
-import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
@@ -23,6 +21,10 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
     private String username;
     @Value("{machiavelli.card.datasource.password}")
     private String password;
+    private final int connectionTimeout = 5;
+    private final int IdleTimeout = 2;
+    private final int keepAliveTimeout = 10;
+    private final int maxLifetime = 30;
 
 
     @Bean
@@ -33,7 +35,10 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
         config.setDriverClassName(this.driverClassName);
         config.setUsername(this.username);
         config.setPassword(this.password);
-        config.setConnectionTimeout(TimeUnit.MINUTES.toMillis(5));
+        config.setConnectionTimeout(TimeUtils.MinutesToMilis(connectionTimeout));
+        config.setIdleTimeout(TimeUtils.MinutesToMilis(IdleTimeout));
+        config.setKeepaliveTime(TimeUtils.MinutesToMilis(keepAliveTimeout));
+        config.setMaxLifetime(TimeUtils.MinutesToMilis(maxLifetime));
         return config;
     }
 
