@@ -26,9 +26,8 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
     private final int keepAliveTimeout = 10;
     private final int maxLifetime = 30;
 
-
     @Bean
-    @ConfigurationProperties(prefix ="machiavelli.card.datasource")
+    @ConfigurationProperties(prefix = "machiavelli.card.datasource")
     public HikariConfig hikariConfig() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(this.url);
