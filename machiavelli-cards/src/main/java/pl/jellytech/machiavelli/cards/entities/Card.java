@@ -17,26 +17,28 @@ import java.util.Optional;
 @NoArgsConstructor
 public class Card implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_id", unique = true, nullable = false)
     private long cardId;
     @Column(name = "type", nullable = false)
     private CardType type;
     @Column(name = "name", unique = true, nullable = false)
     private String name;
-    @Column(name = "image", unique = true, nullable = false ,columnDefinition = "TEXT")
+    @Column(name = "image", unique = true, nullable = false, columnDefinition = "TEXT")
     @Lob
     private byte[] image;
     @Column(name = "description", unique = true, nullable = false)
     private String description;
-    public Card(CardType type, String name, byte[] image, String description, Optional<Long> cardId){
+
+    public Card(CardType type, String name, byte[] image, String description, Optional<Long> cardId) {
         this.setType(type);
         this.setName(name);
         this.setImage(image);
         this.setDescription(description);
         cardId.ifPresent(aLong -> this.setCardId(cardId.get()));
     }
-    public CardResponse convertToDto(Card this, ModelMapper modelMapper){
+
+    public CardResponse convertToDto(Card this, ModelMapper modelMapper) {
         CardResponse dto = modelMapper.map(this, CardResponse.class);
         return dto;
     }
