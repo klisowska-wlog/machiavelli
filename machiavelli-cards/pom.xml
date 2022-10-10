@@ -17,6 +17,7 @@
         <lombok.version>1.18.24</lombok.version>
         <hikari.version>5.0.1</hikari.version>
         <modelmapper.version>3.1.0</modelmapper.version>
+        <io.dropwizard.metrics.version.version>4.2.12</io.dropwizard.metrics.version.version>
     </properties>
 
     <dependencies>
@@ -44,6 +45,11 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>${hikari.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${io.dropwizard.metrics.version.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

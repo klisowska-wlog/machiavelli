@@ -1,5 +1,6 @@
 package pl.jellytech.machiavelli.cards.controllers;
 
+import com.codahale.metrics.MetricRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,14 @@ import java.util.stream.Collectors;
 public class CardController {
     private final CardService cardService;
     private final ModelMapper modelMapper;
+    private final MetricRegistry metricRegistry;
 
     @Autowired
-    public CardController(CardService cardService, ModelMapper modelMapper) {
+    public CardController(CardService cardService, ModelMapper modelMapper,
+                          MetricRegistry metricRegistry) {
         this.cardService = cardService;
         this.modelMapper = modelMapper;
+        this.metricRegistry = metricRegistry;
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -50,8 +54,8 @@ public class CardController {
             ));
             final Card card = ControllerUtils.FunctionLogMeasureWrapper(func,
                     String.format("Saving Card entity with name %s", name),
-                    String.format("Card %s saved", name));
-
+                    String.format("Card %s saved", name),metricRegistry);
+            System.out.println(metricRegistry);
             return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
@@ -67,8 +71,7 @@ public class CardController {
             Supplier<List<Card>> callableFunc = this.cardService::getAll;
             List<Card> cards = ControllerUtils.FunctionLogMeasureWrapper(callableFunc,
                     "Get all cards started...",
-                    "Get all cards finished...");
-
+                    "Get all cards finished...",metricRegistry);
             return ControllerUtils
                     .SuccessResponse(
                             cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList())
@@ -86,7 +89,7 @@ public class CardController {
             final String generalLogMsg = String.format("Get card by id %s from DB", cardId);
             final Card card = ControllerUtils.FunctionLogMeasureWrapper(function,
                     String.format("%s started...", generalLogMsg),
-                    String.format("%s finished...", generalLogMsg));
+                    String.format("%s finished...", generalLogMsg),metricRegistry);
             if (card == null) {
                 return ControllerUtils.ErrorResponse(
                         new Exception(String.format("Card with id %s not found", cardId)),
@@ -106,7 +109,7 @@ public class CardController {
             final String generalLogMsg = String.format("Delete card by id %s from DB", cardId);
             Runnable func = () -> this.cardService.delete(cardId);
             ControllerUtils.FunctionLogMeasureWrapper(func, String.format("%s started...", generalLogMsg),
-                    String.format("%s finished...", generalLogMsg));
+                    String.format("%s finished...", generalLogMsg),metricRegistry);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
