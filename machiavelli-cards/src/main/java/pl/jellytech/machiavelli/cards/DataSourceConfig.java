@@ -19,39 +19,45 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
     public DataSourceConfig(MetricRegistry metricRegistry){
         this.metricRegistry = metricRegistry;
     }
-    @Value("${machiavelli.card.datasource.url}")
+    @Value("${machiavelli.card.datasource.meta.url}")
     private String url;
-    @Value("${machiavelli.card.datasource.driverClassName}")
+    @Value("${machiavelli.card.datasource.meta.driverClassName}")
     private String driverClassName;
-    @Value("{machiavelli.card.datasource.username}")
+    @Value("${machiavelli.card.datasource.meta.username}")
     private String username;
-    @Value("{machiavelli.card.datasource.password}")
+    @Value("${machiavelli.card.datasource.meta.password}")
     private String password;
-    private final int connectionTimeout = 5;
-    private final int IdleTimeout = 2;
-    private final int keepAliveTimeout = 10;
-    private final int maxLifetime = 30;
-    private final int minimumIdle = 10;
-
-    private final int maximumPoolSize = this.minimumIdle;
+    @Value("${machiavelli.card.datasource.connectionTimeout}")
+    private int connectionTimeout;
+    @Value("${machiavelli.card.datasource.IdleTimeout}")
+    private int IdleTimeout;
+    @Value("${machiavelli.card.datasource.keepAliveTimeout}")
+    private int keepAliveTimeout;
+    @Value("${machiavelli.card.datasource.maxLifetime}")
+    private int maxLifetime;
+    @Value("${machiavelli.card.datasource.minimumIdle}")
+    private int minimumIdle;
+    @Value("${machiavelli.card.datasource.maximumPoolSize}")
+    private int maximumPoolSize;
+    @Value("${machiavelli.card.datasource.autocomit}")
+    private boolean autocomit;
 
     @Bean
-    @ConfigurationProperties(prefix = "machiavelli.card.datasource")
+    @ConfigurationProperties(prefix = "machiavelli.card.datasource.meta")
     public HikariConfig hikariConfig() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(this.url);
-        config.setDriverClassName(this.driverClassName);
-        config.setUsername(this.username);
-        config.setPassword(this.password);
-        config.setConnectionTimeout(TimeUtils.MinutesToMilis(this.connectionTimeout));
-        config.setIdleTimeout(TimeUtils.MinutesToMilis(this.IdleTimeout));
-        config.setKeepaliveTime(TimeUtils.MinutesToMilis(this.keepAliveTimeout));
-        config.setMaxLifetime(TimeUtils.MinutesToMilis(this.maxLifetime));
-        config.setAutoCommit(true);
-        config.setMinimumIdle(this.minimumIdle);
-        config.setMaximumPoolSize(this.maximumPoolSize);
-        config.setMetricRegistry(this.metricRegistry);
-        return config;
+        this.setJdbcUrl(this.url);
+        this.setDriverClassName(this.driverClassName);
+        this.setUsername(this.username);
+        this.setPassword(this.password);
+        this.setConnectionTimeout(TimeUtils.MinutesToMilis(this.connectionTimeout));
+        this.setIdleTimeout(TimeUtils.MinutesToMilis(this.IdleTimeout));
+        this.setKeepaliveTime(TimeUtils.MinutesToMilis(this.keepAliveTimeout));
+        this.setMaxLifetime(TimeUtils.MinutesToMilis(this.maxLifetime));
+        this.setAutoCommit(this.autocomit);
+        this.setMinimumIdle(this.minimumIdle);
+        this.setMaximumPoolSize(this.maximumPoolSize);
+        this.setMetricRegistry(this.metricRegistry);
+        return this;
     }
 
     @Bean
