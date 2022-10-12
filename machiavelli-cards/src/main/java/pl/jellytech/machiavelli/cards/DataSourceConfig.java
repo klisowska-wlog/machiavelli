@@ -42,7 +42,7 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
     @Value("${machiavelli.card.datasource.maximumPoolSize}")
     private int maximumPoolSize;
     @Value("${machiavelli.card.datasource.autocomit}")
-    private boolean autocomit;
+    private boolean autoCommit;
 
     @Bean
     @ConfigurationProperties(prefix = "machiavelli.card.datasource.meta")
@@ -55,7 +55,7 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
         this.setIdleTimeout(TimeUtils.MinutesToMilis(this.IdleTimeout));
         this.setKeepaliveTime(TimeUtils.MinutesToMilis(this.keepAliveTimeout));
         this.setMaxLifetime(TimeUtils.MinutesToMilis(this.maxLifetime));
-        this.setAutoCommit(this.autocomit);
+        this.setAutoCommit(this.autoCommit);
         this.setMinimumIdle(this.minimumIdle);
         this.setMaximumPoolSize(this.maximumPoolSize);
         this.setMetricRegistry(this.metricRegistry);

@@ -16,12 +16,11 @@ public class BeansConfig {
         return new ModelMapper();
     }
 
+    // Beans that is used for collecting and calculating statistical metrics about technical data of application
     @Bean
     public MetricRegistry metricRegistry() {
         MetricRegistry mr = new MetricRegistry();
         mr.timer(MetricRegistryToolsTypes.RequestTimer.name());
-        mr.histogram("histogram");
-        mr.gauge("cachedgauge");
         return mr;
     }
 }

@@ -19,6 +19,7 @@ public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_id", unique = true, nullable = false)
+    // id with entity acronym naming convention
     private long cardId;
     @Column(name = "type", nullable = false)
     private CardType type;

@@ -46,7 +46,6 @@ public class CardController {
                     .createOrUpdate(new Card(CardType.valueOf(cardType.toUpperCase()), name, imageBytes, description, cardId));
             final Card card = ControllerUtils.FunctionLogMeasureWrapper(func, String.format("Saving Card entity with name %s", name),
                     String.format("Card %s saved", name), metricRegistry);
-            System.out.println(metricRegistry);
             return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
