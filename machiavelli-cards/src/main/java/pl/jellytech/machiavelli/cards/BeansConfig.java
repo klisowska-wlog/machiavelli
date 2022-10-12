@@ -15,8 +15,9 @@ public class BeansConfig {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
     @Bean
-    public MetricRegistry metricRegistry(){
+    public MetricRegistry metricRegistry() {
         MetricRegistry mr = new MetricRegistry();
         mr.timer(MetricRegistryToolsTypes.RequestTimer.name());
         mr.histogram("histogram");

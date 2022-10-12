@@ -18,8 +18,8 @@
         <hikari.version>5.0.1</hikari.version>
         <modelmapper.version>3.1.0</modelmapper.version>
         <io.dropwizard.metrics.version.version>4.2.12</io.dropwizard.metrics.version.version>
+        <revelc.version>2.0.1</revelc.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -73,6 +73,23 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>${revelc.version}</version>
+                <configuration>
+                    <configFile>${project.basedir}/src/main/resources/eclipse-intellij-formatter.xml</configFile>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

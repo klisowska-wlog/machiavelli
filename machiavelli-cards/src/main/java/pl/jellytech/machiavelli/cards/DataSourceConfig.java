@@ -14,11 +14,13 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
-    private MetricRegistry  metricRegistry;
+    private MetricRegistry metricRegistry;
+
     @Autowired
-    public DataSourceConfig(MetricRegistry metricRegistry){
+    public DataSourceConfig(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
+
     @Value("${machiavelli.card.datasource.meta.url}")
     private String url;
     @Value("${machiavelli.card.datasource.meta.driverClassName}")

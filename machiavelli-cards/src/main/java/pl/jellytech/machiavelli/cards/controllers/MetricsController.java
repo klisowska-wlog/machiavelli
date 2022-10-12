@@ -18,8 +18,9 @@ import pl.jellytech.machiavelli.cards.utils.MetricRegistryToolsTypes;
 @Slf4j
 public class MetricsController {
     private final MetricRegistry metricRegistry;
+
     @Autowired
-    public MetricsController(MetricRegistry metricRegistry){
+    public MetricsController(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
 
@@ -29,6 +30,6 @@ public class MetricsController {
         final Timer timer = this.metricRegistry.timer(requestTimerName);
         final long requests = timer.getCount();
         final Snapshot snapshot = timer.getSnapshot();
-        return ControllerUtils.SuccessResponse(new RequestTimerResponse(requests,snapshot));
+        return ControllerUtils.SuccessResponse(new RequestTimerResponse(requests, snapshot));
     }
 }

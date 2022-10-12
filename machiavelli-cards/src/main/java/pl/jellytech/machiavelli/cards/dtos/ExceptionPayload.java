@@ -15,4 +15,3 @@ public class ExceptionPayload {
     private String message;
     private StackTraceElement[] stackTrace;
 }
-

@@ -38,7 +38,7 @@ public class Card implements Serializable {
         cardId.ifPresent(aLong -> this.setCardId(cardId.get()));
     }
 
-    public CardResponse convertToDto(Card this, ModelMapper modelMapper) {
+    public CardResponse convertToDto(Card this,ModelMapper modelMapper) {
         CardResponse dto = modelMapper.map(this, CardResponse.class);
         return dto;
     }

@@ -29,32 +29,23 @@ public class CardController {
     private final MetricRegistry metricRegistry;
 
     @Autowired
-    public CardController(CardService cardService, ModelMapper modelMapper,
-                          MetricRegistry metricRegistry) {
+    public CardController(CardService cardService, ModelMapper modelMapper, MetricRegistry metricRegistry) {
         this.cardService = cardService;
         this.modelMapper = modelMapper;
         this.metricRegistry = metricRegistry;
     }
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity createOrUpdate(@RequestPart("cardType") String cardType,
-                                         @RequestPart("name") String name,
-                                         @RequestPart("description") String description,
-                                         @RequestPart(value = "cardId", required = false) Optional<Long> cardId,
-                                         @RequestPart("image") MultipartFile image) {
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity createOrUpdate(@RequestPart("cardType") String cardType, @RequestPart("name") String name,
+            @RequestPart("description") String description, @RequestPart(value = "cardId", required = false) Optional<Long> cardId,
+            @RequestPart("image") MultipartFile image) {
 
         try {
             final byte[] imageBytes = image.getBytes();
-            Supplier<Card> func = () -> this.cardService.createOrUpdate(new Card(
-                    CardType.valueOf(cardType.toUpperCase()),
-                    name,
-                    imageBytes,
-                    description,
-                    cardId
-            ));
-            final Card card = ControllerUtils.FunctionLogMeasureWrapper(func,
-                    String.format("Saving Card entity with name %s", name),
-                    String.format("Card %s saved", name),metricRegistry);
+            Supplier<Card> func = () -> this.cardService
+                    .createOrUpdate(new Card(CardType.valueOf(cardType.toUpperCase()), name, imageBytes, description, cardId));
+            final Card card = ControllerUtils.FunctionLogMeasureWrapper(func, String.format("Saving Card entity with name %s", name),
+                    String.format("Card %s saved", name), metricRegistry);
             System.out.println(metricRegistry);
             return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         } catch (IOException ex) {
@@ -67,15 +58,9 @@ public class CardController {
     @GetMapping
     public ResponseEntity getAll() {
         try {
-
             Supplier<List<Card>> callableFunc = this.cardService::getAll;
-            List<Card> cards = ControllerUtils.FunctionLogMeasureWrapper(callableFunc,
-                    "Get all cards started...",
-                    "Get all cards finished...",metricRegistry);
-            return ControllerUtils
-                    .SuccessResponse(
-                            cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList())
-                    );
+            List<Card> cards = ControllerUtils.FunctionLogMeasureWrapper(callableFunc, "Get all cards started...", "Get all cards finished...", metricRegistry);
+            return ControllerUtils.SuccessResponse(cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList()));
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -87,14 +72,10 @@ public class CardController {
         try {
             Supplier<Card> function = () -> this.cardService.getById(cardId);
             final String generalLogMsg = String.format("Get card by id %s from DB", cardId);
-            final Card card = ControllerUtils.FunctionLogMeasureWrapper(function,
-                    String.format("%s started...", generalLogMsg),
-                    String.format("%s finished...", generalLogMsg),metricRegistry);
+            final Card card = ControllerUtils.FunctionLogMeasureWrapper(function, String.format("%s started...", generalLogMsg),
+                    String.format("%s finished...", generalLogMsg), metricRegistry);
             if (card == null) {
-                return ControllerUtils.ErrorResponse(
-                        new Exception(String.format("Card with id %s not found", cardId)),
-                        HttpStatus.NOT_FOUND
-                );
+                return ControllerUtils.ErrorResponse(new Exception(String.format("Card with id %s not found", cardId)), HttpStatus.NOT_FOUND);
             }
             return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
         } catch (Exception ex) {
@@ -108,8 +89,8 @@ public class CardController {
         try {
             final String generalLogMsg = String.format("Delete card by id %s from DB", cardId);
             Runnable func = () -> this.cardService.delete(cardId);
-            ControllerUtils.FunctionLogMeasureWrapper(func, String.format("%s started...", generalLogMsg),
-                    String.format("%s finished...", generalLogMsg),metricRegistry);
+            ControllerUtils.FunctionLogMeasureWrapper(func, String.format("%s started...", generalLogMsg), String.format("%s finished...", generalLogMsg),
+                    metricRegistry);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -10,7 +10,6 @@ import pl.jellytech.machiavelli.cards.repositories.CardRepository;
 
 import java.util.List;
 
-
 @Service
 @Slf4j
 public class CardServiceImpl implements CardService {
@@ -23,8 +22,7 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     public Card createOrUpdate(Card card) {
-        card = this.cardRepository.save(card);
-        return card;
+        return this.cardRepository.save(card);
     }
 
     public Card getById(Long cardId) {
