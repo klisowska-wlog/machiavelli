@@ -41,7 +41,7 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
     private int minimumIdle;
     @Value("${machiavelli.card.datasource.maximumPoolSize}")
     private int maximumPoolSize;
-    @Value("${machiavelli.card.datasource.autocomit}")
+    @Value("${machiavelli.card.datasource.autoCommit}")
     private boolean autoCommit;
 
     @Bean

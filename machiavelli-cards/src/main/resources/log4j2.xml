@@ -32,18 +32,14 @@
     <Loggers>
         <logger name="org.hibernate.SQL" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
-            <appender-ref ref="Console-Appender" />
         </logger>
         <logger name="org.hibernate.type" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
-            <appender-ref ref="Console-Appender" />
         </logger>
         <logger name="org.hibernate.type" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
-            <appender-ref ref="Console-Appender" />
         </logger>
         <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="info">
-            <appender-ref ref="Console-Appender" />
             <appender-ref ref="App-File-Appender" />
         </logger>
         <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="debug">
