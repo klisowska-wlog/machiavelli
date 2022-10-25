@@ -36,22 +36,26 @@ public class ControllerUtils {
 
     public static <T> T FunctionLogMeasureWrapper(Supplier<T> func, String startMessage, String endMessage,
             MetricRegistry metricRegistry) {
-        final Timer timer = metricRegistry.timer(requestTimerName);
-        Timer.Context context = timer.time();
-        log.info(startMessage);
+        Timer.Context context = startTimer(metricRegistry, startMessage);
         T result = func.get();
-        final long elapsed = context.stop();
-        final long ms = TimeUtils.TicksToMilliseconds(elapsed);
-        log.info("{} : Duration {} ms", endMessage, ms);
+        endTimer(context, endMessage);
         return result;
     }
 
     public static void FunctionLogMeasureWrapper(Runnable func, String startMessage, String endMessage,
             MetricRegistry metricRegistry) {
+        Timer.Context context = startTimer(metricRegistry, startMessage);
+        func.run();
+        endTimer(context, endMessage);
+
+    }
+    private static Timer.Context startTimer(MetricRegistry metricRegistry, String startMessage){
         final Timer timer = metricRegistry.timer(requestTimerName);
         Timer.Context context = timer.time();
         log.info(startMessage);
-        func.run();
+        return context;
+    }
+    private static void endTimer(Timer.Context context, String endMessage){
         final long elapsed = context.stop();
         final long ms = TimeUtils.TicksToMilliseconds(elapsed);
         log.info("{} : Duration {} ms", endMessage, ms);

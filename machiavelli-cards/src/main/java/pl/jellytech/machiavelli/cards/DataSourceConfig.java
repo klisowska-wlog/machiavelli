@@ -31,7 +31,7 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
     private String password;
     @Value("${machiavelli.card.datasource.connectionTimeout}")
     private int connectionTimeout;
-    @Value("${machiavelli.card.datasource.IdleTimeout}")
+    @Value("${machiavelli.card.datasource.idleTimeout}")
     private int IdleTimeout;
     @Value("${machiavelli.card.datasource.keepAliveTimeout}")
     private int keepAliveTimeout;

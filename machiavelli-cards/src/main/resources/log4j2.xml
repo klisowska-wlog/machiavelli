@@ -39,13 +39,9 @@
         <logger name="org.hibernate.type" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
         </logger>
-        <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="info">
-            <appender-ref ref="App-File-Appender" />
-        </logger>
         <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
         </logger>
-        <!-- Root logger referring to console appender -->
         <Root level="info" additivity="false">
             <AppenderRef ref="App-File-Appender" />
         </Root>
