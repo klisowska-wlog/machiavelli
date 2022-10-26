@@ -30,6 +30,6 @@ public class MetricsController {
         final Timer timer = this.metricRegistry.timer(requestTimerName);
         final long requests = timer.getCount();
         final Snapshot snapshot = timer.getSnapshot();
-        return ControllerUtils.SuccessResponse(new RequestTimerResponse(requests, snapshot));
+        return ControllerUtils.successResponse(new RequestTimerResponse(requests, snapshot));
     }
 }

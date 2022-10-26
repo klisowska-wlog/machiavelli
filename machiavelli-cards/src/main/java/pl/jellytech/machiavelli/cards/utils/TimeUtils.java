@@ -18,6 +18,6 @@ public class TimeUtils {
     }
 
     public static int TicksToMilliseconds(long ticks) {
-        return (int) (ticks % MILLIS_PER_SECOND);
+        return new Long(ticks % MILLIS_PER_SECOND).intValue();
     }
 }

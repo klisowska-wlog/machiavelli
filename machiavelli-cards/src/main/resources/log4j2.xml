@@ -36,9 +36,6 @@
         <logger name="org.hibernate.type" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
         </logger>
-        <logger name="org.hibernate.type" additivity="false" level="debug">
-            <appender-ref ref="App-File-Appender" />
-        </logger>
         <logger name="pl.jellytech.machiavelli.cards" additivity="false" level="debug">
             <appender-ref ref="App-File-Appender" />
         </logger>

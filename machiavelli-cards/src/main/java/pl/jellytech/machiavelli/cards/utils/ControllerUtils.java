@@ -1,6 +1,5 @@
 package pl.jellytech.machiavelli.cards.utils;
 
-import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +10,6 @@ import pl.jellytech.machiavelli.cards.dtos.BaseResponseWrapper;
 import pl.jellytech.machiavelli.cards.dtos.ExceptionPayload;
 
 import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
@@ -20,12 +17,12 @@ import java.util.function.Supplier;
 public class ControllerUtils {
     final static String requestTimerName = MetricRegistryToolsTypes.RequestTimer.name();
 
-    public static <T> ResponseEntity<BaseResponseWrapper<T>> SuccessResponse(T successPayload) {
+    public static <T> ResponseEntity<BaseResponseWrapper<T>> successResponse(T successPayload) {
         final BaseResponseWrapper<T> response = new BaseResponseWrapper<T>(successPayload, null);
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
-    public static ResponseEntity<BaseResponseWrapper> ErrorResponse(Exception exception, HttpStatus status) {
+    public static ResponseEntity<BaseResponseWrapper> errorResponse(Exception exception, HttpStatus status) {
 
         final ExceptionPayload exceptionPayload = new ExceptionPayload(Timestamp.valueOf(LocalDateTime.now()), status, exception.getMessage(),
                 exception.getStackTrace());
@@ -34,16 +31,16 @@ public class ControllerUtils {
         return new ResponseEntity<BaseResponseWrapper>(response, status);
     }
 
-    public static <T> T FunctionLogMeasureWrapper(Supplier<T> func, String startMessage, String endMessage,
-            MetricRegistry metricRegistry) {
+    public static <T> T functionLogMeasureWrapper(Supplier<T> func, String startMessage, String endMessage,
+                                                  MetricRegistry metricRegistry) {
         Timer.Context context = startTimer(metricRegistry, startMessage);
         T result = func.get();
         endTimer(context, endMessage);
         return result;
     }
 
-    public static void FunctionLogMeasureWrapper(Runnable func, String startMessage, String endMessage,
-            MetricRegistry metricRegistry) {
+    public static void functionLogMeasureWrapper(Runnable func, String startMessage, String endMessage,
+                                                 MetricRegistry metricRegistry) {
         Timer.Context context = startTimer(metricRegistry, startMessage);
         func.run();
         endTimer(context, endMessage);

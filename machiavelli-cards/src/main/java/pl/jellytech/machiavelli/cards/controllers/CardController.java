@@ -44,12 +44,12 @@ public class CardController {
             final byte[] imageBytes = image.getBytes();
             Supplier<Card> func = () -> this.cardService
                     .createOrUpdate(new Card(CardType.valueOf(cardType.toUpperCase()), name, imageBytes, description, cardId));
-            final Card card = ControllerUtils.FunctionLogMeasureWrapper(func, String.format("Saving Card entity with name %s", name),
+            final Card card = ControllerUtils.functionLogMeasureWrapper(func, String.format("Saving Card entity with name %s", name),
                     String.format("Card %s saved", name), metricRegistry);
-            return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
+            return ControllerUtils.successResponse(card.convertToDto(modelMapper));
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.errorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -58,11 +58,11 @@ public class CardController {
     public ResponseEntity getAll() {
         try {
             Supplier<List<Card>> callableFunc = this.cardService::getAll;
-            List<Card> cards = ControllerUtils.FunctionLogMeasureWrapper(callableFunc, "Get all cards started...", "Get all cards finished...", metricRegistry);
-            return ControllerUtils.SuccessResponse(cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList()));
+            List<Card> cards = ControllerUtils.functionLogMeasureWrapper(callableFunc, "Get all cards started...", "Get all cards finished...", metricRegistry);
+            return ControllerUtils.successResponse(cards.stream().map(c -> c.convertToDto(modelMapper)).collect(Collectors.toList()));
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.errorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -71,15 +71,15 @@ public class CardController {
         try {
             Supplier<Card> function = () -> this.cardService.getById(cardId);
             final String generalLogMsg = String.format("Get card by id %s from DB", cardId);
-            final Card card = ControllerUtils.FunctionLogMeasureWrapper(function, String.format("%s started...", generalLogMsg),
+            final Card card = ControllerUtils.functionLogMeasureWrapper(function, String.format("%s started...", generalLogMsg),
                     String.format("%s finished...", generalLogMsg), metricRegistry);
             if (card == null) {
-                return ControllerUtils.ErrorResponse(new Exception(String.format("Card with id %s not found", cardId)), HttpStatus.NOT_FOUND);
+                return ControllerUtils.errorResponse(new Exception(String.format("Card with id %s not found", cardId)), HttpStatus.NOT_FOUND);
             }
-            return ControllerUtils.SuccessResponse(card.convertToDto(modelMapper));
+            return ControllerUtils.successResponse(card.convertToDto(modelMapper));
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.errorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -88,12 +88,12 @@ public class CardController {
         try {
             final String generalLogMsg = String.format("Delete card by id %s from DB", cardId);
             Runnable func = () -> this.cardService.delete(cardId);
-            ControllerUtils.FunctionLogMeasureWrapper(func, String.format("%s started...", generalLogMsg), String.format("%s finished...", generalLogMsg),
+            ControllerUtils.functionLogMeasureWrapper(func, String.format("%s started...", generalLogMsg), String.format("%s finished...", generalLogMsg),
                     metricRegistry);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            return ControllerUtils.ErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ControllerUtils.errorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ControllerUtils.SuccessResponse(true);
+        return ControllerUtils.successResponse(true);
     }
 }
