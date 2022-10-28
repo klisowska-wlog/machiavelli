@@ -5,19 +5,19 @@ import java.util.concurrent.TimeUnit;
 public class TimeUtils {
     private static final int MILLIS_PER_SECOND = 1000;
 
-    public static long MinutesToMilis(int minutes) {
+    public static long minutesToMilis(int minutes) {
         return TimeUnit.MINUTES.toMillis(minutes);
     }
 
-    public static long TicksToMinutes(long ticks) {
-        return MilisecondsToMinutes(TicksToMilliseconds(ticks));
+    public static long ticksToMinutes(long ticks) {
+        return milisecondsToMinutes(ticksToMilliseconds(ticks));
     }
 
-    public static long MilisecondsToMinutes(long milis) {
+    public static long milisecondsToMinutes(long milis) {
         return TimeUnit.MILLISECONDS.toMinutes(milis);
     }
 
-    public static int TicksToMilliseconds(long ticks) {
+    public static int ticksToMilliseconds(long ticks) {
         return new Long(ticks % MILLIS_PER_SECOND).intValue();
     }
 }

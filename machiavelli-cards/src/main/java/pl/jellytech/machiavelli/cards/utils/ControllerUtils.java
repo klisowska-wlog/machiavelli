@@ -54,7 +54,7 @@ public class ControllerUtils {
     }
     private static void endTimer(Timer.Context context, String endMessage){
         final long elapsed = context.stop();
-        final long ms = TimeUtils.TicksToMilliseconds(elapsed);
+        final long ms = TimeUtils.ticksToMilliseconds(elapsed);
         log.info("{} : Duration {} ms", endMessage, ms);
     }
 }

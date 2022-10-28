@@ -51,10 +51,10 @@ public class DataSourceConfig extends com.zaxxer.hikari.HikariConfig {
         this.setDriverClassName(this.driverClassName);
         this.setUsername(this.username);
         this.setPassword(this.password);
-        this.setConnectionTimeout(TimeUtils.MinutesToMilis(this.connectionTimeout));
-        this.setIdleTimeout(TimeUtils.MinutesToMilis(this.IdleTimeout));
-        this.setKeepaliveTime(TimeUtils.MinutesToMilis(this.keepAliveTimeout));
-        this.setMaxLifetime(TimeUtils.MinutesToMilis(this.maxLifetime));
+        this.setConnectionTimeout(TimeUtils.minutesToMilis(this.connectionTimeout));
+        this.setIdleTimeout(TimeUtils.minutesToMilis(this.IdleTimeout));
+        this.setKeepaliveTime(TimeUtils.minutesToMilis(this.keepAliveTimeout));
+        this.setMaxLifetime(TimeUtils.minutesToMilis(this.maxLifetime));
         this.setAutoCommit(this.autoCommit);
         this.setMinimumIdle(this.minimumIdle);
         this.setMaximumPoolSize(this.maximumPoolSize);
